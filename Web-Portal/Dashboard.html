@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+
+        .container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: linear-gradient(to bottom right, #667eea, #764ba2);
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-box h3 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-box p {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        .alert-box {
+            background-color: #f6e05e;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            padding: 20px;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s;
+        }
+
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toggle-switch {
+            display: inline-block;
+            height: 34px;
+            position: relative;
+            width: 60px;
+        }
+
+        .toggle-switch input {
+            display: none;
+        }
+
+        .toggle-slider {
+            background-color: red;
+            border-radius: 34px;
+            cursor: pointer;
+            height: 100%;
+            left: 0;
+            position: absolute;
+            transition: all 0.3s ease-in-out;
+            width: 100%;
+        }
+
+        .toggle-slider:before {
+            background-color: #fff;
+            border-radius: 50%;
+            bottom: 1px;
+            content: "";
+            height: 32px;
+            left: 1px;
+            position: absolute;
+            transition: all 0.3s ease-in-out;
+            width: 32px;
+        }
+
+        input:checked+.toggle-slider {
+            background-color: #10b981;
+        }
+
+        input:checked+.toggle-slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="alert-box mr-5 ml-5">
+            <p><strong>Alert:</strong> High temperature detected!</p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-8">
+            <div class="card">
+                <h3>Temperature</h3>
+                <p>25°C</p>
+            </div>
+            <div class="card">
+                <h3>Humidity</h3>
+                <p>60%</p>
+            </div>
+            <div class="card">
+                <h3>Pressure</h3>
+                <p>1013 hPa</p>
+            </div>
+            <div class="card">
+                <h3>Soil Moisture</h3>
+                <p>40%</p>
+            </div>
+            <div class="card">
+                <h3>FAN</h3>
+                <label class="inline-flex items-center">
+                    <div class="toggle-switch">
+                        <input type="checkbox">
+                        <span class="toggle-slider"></span>
+                    </div>
+                </label>
+            </div>
+            <div class="card">
+                <h3>Laser</h3>
+                <label class="inline-flex items-center">
+                    <div class="toggle-switch">
+                        <input type="checkbox">
+                        <span class="toggle-slider"></span>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+    </script>
+</body>
+
+</html>

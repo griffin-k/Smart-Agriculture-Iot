@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Additional styles */
+        .container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: linear-gradient(to bottom right, #667eea, #764ba2);
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            padding: 40px;
+            animation: fadeInDown 1s;
+        }
+
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card input {
+            border: none;
+            border-bottom: 2px solid #dddddd;
+            outline: none;
+            font-size: 16px;
+            padding: 10px 0;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .card input:focus {
+            border-bottom: 2px solid #667eea;
+        }
+
+        .card button {
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 12px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .card button:hover {
+            background-color: #5a67d8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h2 class="text-3xl font-bold mb-6 text-center">Welcome Back!</h2>
+            <div class="mb-4">
+                <input class="w-full" type="text" placeholder="Username">
+            </div>
+            <div class="mb-6">
+                <input class="w-full" type="password" placeholder="Password">
+            </div>
+            <div class="flex justify-center">
+                <button class="w-full">Sign In</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add JavaScript logic here if needed
+    </script>
+</body>
+
+</html>
