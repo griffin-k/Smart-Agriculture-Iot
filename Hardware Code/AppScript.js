@@ -1,5 +1,5 @@
 function doGet(e) {
-    var sheetId = ""; // Replace with your actual sheet ID
+    var sheetId = "1J7yYX4wexrCmyqr8SW2LzbwXTWboDhYqNSpk-Mut4TA"; 
     var sheet = SpreadsheetApp.openById(sheetId).getActiveSheet();
   
     // Fetch values from the Google Sheet
@@ -8,22 +8,27 @@ function doGet(e) {
     var soilMoisture = sheet.getRange("C1").getValue();
     var otherValue = sheet.getRange("D1").getValue();
   
-   
-    if (e.parameter.temperature && e.parameter.humidity && e.parameter.soilMoisture && e.parameter.otherValue) {
-      temperature = e.parameter.temperature;
-      humidity = e.parameter.humidity;
-      soilMoisture = e.parameter.soilMoisture;
-      otherValue = e.parameter.otherValue;
+    // Check if new values are provided in the URL parameters
+    if (e.parameter.temperature !== undefined && e.parameter.humidity !== undefined && e.parameter.soilMoisture !== undefined ) {
+      // Update values in the Google Sheet with the new values provided
+      temperature = parseFloat(e.parameter.temperature);
+      humidity = parseFloat(e.parameter.humidity);
+      soilMoisture = parseFloat(e.parameter.soilMoisture);
+      otherValue = parseFloat(e.parameter.otherValue);
   
-      sheet.getRange("A1").setValue(temperature);
-      sheet.getRange("B1").setValue(humidity);
-      sheet.getRange("C1").setValue(soilMoisture);
-      sheet.getRange("D1").setValue(otherValue);
-  
-      return ContentService.createTextOutput("Data updated successfully");
+      try {
+        sheet.getRange("A1").setValue(temperature);
+        sheet.getRange("B1").setValue(humidity);
+        sheet.getRange("C1").setValue(soilMoisture);
+        sheet.getRange("D1").setValue(otherValue);
+        return ContentService.createTextOutput("Data updated successfully");
+      } catch (error) {
+        Logger.log("Error updating sheet: " + error);
+        return ContentService.createTextOutput("Error updating sheet").setStatusCode(500);
+      }
     }
   
-  
+    // Create a JSON object with the fetched values
     var jsonObject = {
       "temperature": temperature,
       "humidity": humidity,
@@ -31,7 +36,7 @@ function doGet(e) {
       "otherValue": otherValue
     };
   
-   
+    // Return the JSON object as the response
     return ContentService.createTextOutput(JSON.stringify(jsonObject)).setMimeType(ContentService.MimeType.JSON);
   }
   
