@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Display Google Sheets Data</title>
+<style>
+  .card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Google Sheets Data</h1>
+
+<div id="temperature" class="card"></div>
+<div id="humidity" class="card"></div>
+<div id="soilMoisture" class="card"></div>
+<div id="otherValue" class="card"></div>
+
+<script>
+// URL of your Apps Script web app
+const scriptUrl = 'https://script.google.com/macros/s/AKfycbyrVa_ikbSfVHGwoyCv6_bVTUGI1meqiuQTNWMvdWLHoMp6_Qyz5yryMlpDFHteA0GENA/exec';
+
+// Fetch data from the Apps Script
+fetch(scriptUrl)
+  .then(response => response.json())
+  .then(data => {
+    // Display the data on the webpage
+    document.getElementById('temperature').innerHTML = `<p>Temperature: ${data.temperature}</p>`;
+    document.getElementById('humidity').innerHTML = `<p>Humidity: ${data.humidity}</p>`;
+    document.getElementById('soilMoisture').innerHTML = `<p>Soil Moisture: ${data.soilMoisture}</p>`;
+    document.getElementById('otherValue').innerHTML = `<p>Other Value: ${data.otherValue}</p>`;
+  })
+  .catch(error => console.error('Error fetching data:', error));
+</script>
+
+</body>
+</html>

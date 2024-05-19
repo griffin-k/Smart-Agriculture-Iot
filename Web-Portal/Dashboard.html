@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Agriculture IOT</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
@@ -135,18 +137,23 @@
             <p><strong>Alert:</strong> High temperature detected!</p>
         </div>
         <div class="flex flex-wrap justify-center gap-8">
-            <div class="card" id="temperatureBox">
-                <h3>Temperature</h3>
-                <p>Loading...</p>
+            <div class="card">
+                <img src="img/sun.png" width="50" height="50" alt="Sun icon"> 
+                <p id="temperature">Loading... </p>
             </div>
-            <div class="card" id="humidityBox">
-                <h3>Humidity</h3>
-                <p>Loading...</p>
+            <div class="card">
+                <img src="img/humidity.png" width="50" height="50" alt="Sun icon"> 
+                <p id="humidity"></i> Loading...</p>
             </div>
-            <div class="card" id="soilMoistureBox">
-                <h3>Soil Moisture</h3>
-                <p>Loading...</p>
+            <div class="card">
+                <img src="img/soil.png" width="50" height="50" alt="Sun icon"> 
+                <p id="soilMoisture"> Loading...</p>
             </div>
+            <div class="card">
+                <img src="img/rain.png" width="50" height="50" alt="Sun icon"> 
+                <p id="soilMoisture"> Loading...</p>
+            </div>
+            
             <div class="card">
                 <h3>FAN</h3>
                 <label class="inline-flex items-center">
@@ -170,7 +177,27 @@
        
     </div>
 
+    <script>
+        const scriptUrl = 'https://script.google.com/macros/s/AKfycbyrVa_ikbSfVHGwoyCv6_bVTUGI1meqiuQTNWMvdWLHoMp6_Qyz5yryMlpDFHteA0GENA/exec';
     
+        function fetchData() {
+            fetch(scriptUrl)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('temperature').innerHTML = `<p>Temperature: ${data.temperature}</p>`;
+                    document.getElementById('humidity').innerHTML = `<p>Humidity: ${data.humidity}</p>`;
+                    document.getElementById('soilMoisture').innerHTML = `<p>Soil Moisture: ${data.soilMoisture}</p>`;
+                    document.getElementById('otherValue').innerHTML = `<p>Other Value: ${data.otherValue}</p>`;
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+    
+        // Fetch data initially
+        fetchData();
+    
+     
+        setInterval(fetchData, 500); 
+    </script>
       
 </body>
 
