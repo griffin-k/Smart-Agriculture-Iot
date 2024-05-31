@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Agriculture Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: linear-gradient(to bottom right, #667eea, #764ba2);
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            height: 300px; /* Fixed height for cards */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+
+        .history-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .history-item {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .alert-box {
+            background-color: #f6e05e;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeInDown 1s;
+        }
+
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .arrow-button {
+            position: absolute;
+            bottom: 20px;
+            background-color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .arrow-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .arrow-button.left {
+            left: 20px;
+        }
+
+        .arrow-button.right {
+            right: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="content">
+            <div class="alert-box" id="alertBox">
+                <p id="alertMessage"><strong>Alert:</strong> High temperature detected!</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-8">
+                <div class="history-card">
+                    <div class="history-title">Temperature History</div>
+                    <div id="tempHistory" class="history-list"></div>
+                </div>
+                <div class="history-card">
+                    <div class="history-title">Humidity History</div>
+                    <div id="humidityHistory" class="history-list"></div>
+                </div>
+                <div class="history-card">
+                    <div class="history-title">Soil Moisture History</div>
+                    <div id="soilMoistureHistory" class="history-list"></div>
+                </div>
+                <div class="history-card">
+                    <div class="history-title">Water Supply History</div>
+                    <div id="waterSupplyHistory" class="history-list"></div>
+                </div>
+            </div>
+        </div>
+        <button class="arrow-button left" id="next">
+            &#9664; <!-- Left arrow symbol -->
+        </button>
+        <button class="arrow-button right" id="back">
+            &#9654; <!-- Right arrow symbol -->
+        </button>
+    </div>
+
+    <script>
+    document.getElementById("next").onclick = function() {
+    window.location.href = "https://www.example.com"; // Replace with your desired URL
+};
+document.getElementById("back").onclick = function() {
+    window.location.href = "https://www.hello.com"; // Replace with your desired URL
+};
+        const firebaseHost = 'https://smart-agricultrure-default-rtdb.firebaseio.com/';
+        const firebasePath = '/sensorData.json';
+        const firebaseAuth = 'AIzaSyD_B-2C-klfrOAPtiGpkAFa_KEGg8aiEvo';
+
+        function fetchData() {
+            const url = `${firebaseHost}${firebasePath}?auth=${firebaseAuth}`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Check temperature and show alert if necessary
+                    if (data.temperature > 30) {
+                        document.getElementById('alertMessage').innerHTML = `<strong>Alert:</strong> High temperature detected!`;
+                        document.getElementById('alertBox').style.display = 'block';
+                    } else {
+                        document.getElementById('alertBox').style.display = 'none';
+                    }
+
+                    // Update history
+                    updateHistory(data);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Fetch data initially
+        fetchData();
+
+        // Refresh data every 5 seconds
+        setInterval(fetchData, 5000);
+
+        function updateHistory(data) {
+            const currentTime = new Date().toLocaleTimeString();
+
+            // Update temperature history
+            const tempHistory = document.getElementById('tempHistory');
+            const tempItem = document.createElement('div');
+            tempItem.className = 'history-item';
+            tempItem.textContent = `${currentTime}: ${data.temperature} °C`;
+            tempHistory.appendChild(tempItem);
+            if (tempHistory.childElementCount > 10) {
+                tempHistory.removeChild(tempHistory.firstChild);
+            }
+
+            // Update humidity history
+            const humidityHistory = document.getElementById('humidityHistory');
+            const humidityItem = document.createElement('div');
+            humidityItem.className = 'history-item';
+            humidityItem.textContent = `${currentTime}: ${data.humidity} %`;
+            humidityHistory.appendChild(humidityItem);
+            if (humidityHistory.childElementCount > 10) {
+                humidityHistory.removeChild(humidityHistory.firstChild);
+            }
+
+            // Update soil moisture history
+            const soilMoistureHistory = document.getElementById('soilMoistureHistory');
+            const soilMoistureItem = document.createElement('div');
+            soilMoistureItem.className = 'history-item';
+            soilMoistureItem.textContent = `${currentTime}: ${data.soilMoisture} %`;
+            soilMoistureHistory.appendChild(soilMoistureItem);
+            if (soilMoistureHistory.childElementCount > 10) {
+                soilMoistureHistory.removeChild(soilMoistureHistory.firstChild);
+            }
+
+            // Update water supply history
+            const waterSupplyHistory = document.getElementById('waterSupplyHistory');
+            const waterSupplyItem = document.createElement('div');
+            waterSupplyItem.className = 'history-item';
+            waterSupplyItem.textContent = `${currentTime}: ${data.waterSupply} liters`;
+            waterSupplyHistory.appendChild(waterSupplyItem);
+            if (waterSupplyHistory.childElementCount > 10) {
+                waterSupplyHistory.removeChild(waterSupplyHistory.firstChild);
+            }
+        }
+
+        function scrollLeft() {
+            document.querySelector('.content').scrollBy({ left: -300, behavior: 'smooth' });
+        }
+
+        function scrollRight() {
+            document.querySelector('.content').scrollBy({ left: 300, behavior: 'smooth' });
+        }
+    </script>
+</body>
+
+</html>

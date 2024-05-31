@@ -6,9 +6,9 @@
 #define DHTTYPE DHT11
 #define SOIL_MOISTURE_PIN A0
 
-const char* ssid = "";
-const char* password = "";
-const char* serverName = "";
+const char* ssid = "Zaheer";
+const char* password = "12345678";
+const char* serverName = "https://script.google.com/macros/s/AKfycbyrVa_ikbSfVHGwoyCv6_bVTUGI1meqiuQTNWMvdWLHoMp6_Qyz5yryMlpDFHteA0GENA/exec";
 
 
 
@@ -34,7 +34,7 @@ void loop() {
     HTTPClient http;
     WiFiClientSecure client;
 
-    // Ignore SSL verification
+    // Ignore SSL verification it is complsry for making a connection to google script
     client.setInsecure();
 
     float temperature = dht.readTemperature();
@@ -48,7 +48,7 @@ void loop() {
 
     String url = String(serverName) + "?temperature=" + String(temperature) + "&humidity=" + String(humidity) + "&soilMoisture=" + String(soilMoistureValue);
     Serial.println("Sending GET request to: " + url);
-    http.begin(client, url); // Use client instead of WiFiClient
+    http.begin(client, url);
     int httpResponseCode = http.GET();
 
     if (httpResponseCode > 0) {

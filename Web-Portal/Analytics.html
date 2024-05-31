@@ -9,7 +9,6 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-
         .container {
             height: 100vh;
             display: flex;
@@ -64,14 +63,70 @@
                 transform: translateY(0);
             }
         }
+
+        .alert-box {
+            background-color: #f6e05e;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeInDown 1s;
+        }
+
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .arrow-button {
+            position: absolute;
+            bottom: 20px;
+            background-color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .arrow-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .arrow-button.left {
+            left: 20px;
+        }
+
+        .arrow-button.right {
+            right: 20px;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
         <div class="content">
+            <div class="alert-box" id="alertBox">
+                <p id="alertMessage"><strong>Alert:</strong> High temperature detected!</p>
+            </div>
             <div class="flex flex-wrap justify-center gap-8">
-                <div class="chart-card">
+                <!-- <div class="chart-card">
+                    <canvas id="tempChart"></canvas>
+                </div> -->
+                <div class="chart-card" style="overflow-x: auto;">
                     <canvas id="tempChart"></canvas>
                 </div>
                 <div class="chart-card">
@@ -85,18 +140,68 @@
                 </div>
             </div>
         </div>
+        <button class="arrow-button left" id="next">
+            &#9664; <!-- Left arrow symbol -->
+        </button>
+        <button class="arrow-button right" id="back">
+            &#9654; <!-- Right arrow symbol -->
+        </button>
     </div>
 
     <script>
-        // Temperature Chart
+    document.getElementById("next").onclick = function() {
+    window.location.href = "https://www.example.com"; // Replace with your desired URL
+};
+document.getElementById("back").onclick = function() {
+    window.location.href = "https://www.hello.com"; // Replace with your desired URL
+};
+
+
+
+        const firebaseHost = 'https://smart-agricultrure-default-rtdb.firebaseio.com/';
+        const firebasePath = '/sensorData.json';
+        const firebaseAuth = 'AIzaSyD_B-2C-klfrOAPtiGpkAFa_KEGg8aiEvo';
+
+        function fetchData() {
+            const url = `${firebaseHost}${firebasePath}?auth=${firebaseAuth}`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Update charts with fetched data
+                    updateCharts(data);
+                    
+                    // Check temperature and show alert if necessary
+                    // if (data.temperature > 30) {
+                    //     document.getElementById('alertMessage').innerHTML = `<strong>Alert:</strong> High temperature detected!`;
+                    //     document.getElementById('alertBox').style.display = 'block';
+                    // } else {
+                    //     document.getElementById('alertMessage').innerHTML = `<strong>Alert:</strong> Temperature is normal.`;
+                    //     document.getElementById('alertBox').style.display = 'block';
+                    // }
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // Fetch data initially
+        fetchData();
+
+        // Refresh data every 5 seconds
+        setInterval(fetchData, 5000);
+
+        // Chart configurations
         var tempCtx = document.getElementById('tempChart').getContext('2d');
+        var humidityCtx = document.getElementById('humidityChart').getContext('2d');
+        var soilMoistureCtx = document.getElementById('soilMoistureChart').getContext('2d');
+        var waterSupplyCtx = document.getElementById('waterSupplyChart').getContext('2d');
+
         var tempChart = new Chart(tempCtx, {
             type: 'line',
             data: {
-                labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'],
+                labels: [],
                 datasets: [{
                     label: 'Temperature (°C)',
-                    data: [25, 26, 24, 27, 25],
+                    data: [],
                     borderColor: 'rgba(255, 99, 132, 1)',
                     borderWidth: 2,
                     fill: false
@@ -111,15 +216,13 @@
             }
         });
 
-        // Humidity Chart
-        var humidityCtx = document.getElementById('humidityChart').getContext('2d');
         var humidityChart = new Chart(humidityCtx, {
             type: 'line',
             data: {
-                labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'],
+                labels: [],
                 datasets: [{
                     label: 'Humidity (%)',
-                    data: [60, 62, 58, 65, 63],
+                    data: [],
                     borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 2,
                     fill: false
@@ -134,15 +237,13 @@
             }
         });
 
-        // Soil Moisture Chart
-        var soilMoistureCtx = document.getElementById('soilMoistureChart').getContext('2d');
         var soilMoistureChart = new Chart(soilMoistureCtx, {
             type: 'line',
             data: {
-                labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'],
+                labels: [],
                 datasets: [{
                     label: 'Soil Moisture (%)',
-                    data: [40, 42, 38, 45, 43],
+                    data: [],
                     borderColor: 'rgba(255, 206, 86, 1)',
                     borderWidth: 2,
                     fill: false
@@ -157,15 +258,13 @@
             }
         });
 
-        // Water Supply Chart
-        var waterSupplyCtx = document.getElementById('waterSupplyChart').getContext('2d');
         var waterSupplyChart = new Chart(waterSupplyCtx, {
             type: 'line',
             data: {
-                labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'],
+                labels: [],
                 datasets: [{
                     label: 'Water Supply (liters)',
-                    data: [100, 120, 90, 110, 105],
+                    data: [],
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 2,
                     fill: false
@@ -179,6 +278,48 @@
                 }
             }
         });
+
+        function updateCharts(data) {
+            const currentTime = new Date().toLocaleTimeString();
+
+            // Update temperature chart
+            tempChart.data.labels.push(currentTime);
+            tempChart.data.datasets[0].data.push(data.temperature);
+            if (tempChart.data.labels.length > 10) {
+                tempChart.data.labels.shift();
+                tempChart.data.datasets[0].data.shift();
+            }
+            tempChart.update();
+
+            // Update humidity chart
+            humidityChart.data.labels.push(currentTime);
+            humidityChart.data.datasets[0].data.push(data.humidity);
+            if (humidityChart.data.labels.length > 10) {
+                humidityChart.data.labels.shift();
+                humidityChart.data.datasets[0].data.shift();
+            }
+            humidityChart.update();
+
+       
+            soilMoistureChart.data.labels.push(currentTime);
+            soilMoistureChart.data.datasets[0].data.push(data.soilMoisture);
+            if (soilMoistureChart.data.labels.length > 10) {
+                soilMoistureChart.data.labels.shift();
+                soilMoistureChart.data.datasets[0].data.shift();
+            }
+            soilMoistureChart.update();
+
+        
+            waterSupplyChart.data.labels.push(currentTime);
+            waterSupplyChart.data.datasets[0].data.push(data.waterSupply);
+            if (waterSupplyChart.data.labels.length > 10) {
+                waterSupplyChart.data.labels.shift();
+                waterSupplyChart.data.datasets[0].data.shift();
+            }
+            waterSupplyChart.update();
+
+        }
+        delay(15000);
     </script>
 </body>
 

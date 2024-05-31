@@ -7,10 +7,8 @@
     <title>Smart Agriculture IOT</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-
         .container {
             height: 100vh;
             display: flex;
@@ -128,13 +126,42 @@
                 transform: translateY(0);
             }
         }
+
+        .arrow-button {
+            position: absolute;
+            bottom: 20px;
+            background-color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .arrow-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .arrow-button.left {
+            left: 20px;
+        }
+
+        .arrow-button.right {
+            right: 20px;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="alert-box mr-5 ml-5">
-            <p><strong>Alert:</strong> High temperature detected!</p>
+        <div class="alert-box mr-5 ml-5" id="alertBox" style="display:none;">
+            <p id="alertMessage"><strong>Alert:</strong> High temperature detected!</p>
         </div>
         <div class="flex flex-wrap justify-center gap-8">
             <div class="card">
@@ -143,62 +170,74 @@
             </div>
             <div class="card">
                 <img src="img/humidity.png" width="50" height="50" alt="Sun icon"> 
-                <p id="humidity"></i> Loading...</p>
+                <p id="humidity">Loading...</p>
             </div>
             <div class="card">
                 <img src="img/soil.png" width="50" height="50" alt="Sun icon"> 
-                <p id="soilMoisture"> Loading...</p>
+                <p id="soilMoisture">Loading...</p>
             </div>
             <div class="card">
                 <img src="img/rain.png" width="50" height="50" alt="Sun icon"> 
-                <p id="soilMoisture"> Loading...</p>
-            </div>
-            
-            <div class="card">
-                <h3>FAN</h3>
-                <label class="inline-flex items-center">
-                    <div class="toggle-switch">
-                        <input type="checkbox">
-                        <span class="toggle-slider"></span>
-                    </div>
-                </label>
+                <p id="rainSensor">Loading...</p>
             </div>
             <div class="card">
-                <h3>Laser</h3>
-                <label class="inline-flex items-center">
-                    <div class="toggle-switch">
-                        <input type="checkbox">
-                        <span class="toggle-slider"></span>
-                    </div>
-                </label>
+                <img src="img/pump.png" width="50" height="50" alt="Sun icon"> 
+                <p id="pumpStatus">Loading...</p>
             </div>
-          
+            <div class="card">
+                <img src="img/stop.png" width="50" height="50" alt="Sun icon"> 
+                <p id="stop">Loading...</p>
+            </div>
         </div>
-       
+        <button class="arrow-button left" id="next">
+            &#9664; <!-- Left arrow symbol -->
+        </button>
+        <button class="arrow-button right" id="back">
+            &#9654; <!-- Right arrow symbol -->
+        </button>
     </div>
 
     <script>
-        const scriptUrl = 'https://script.google.com/macros/s/AKfycbyrVa_ikbSfVHGwoyCv6_bVTUGI1meqiuQTNWMvdWLHoMp6_Qyz5yryMlpDFHteA0GENA/exec';
-    
+    document.getElementById("next").onclick = function() {
+    window.location.href = "https://www.example.com"; // Replace with your desired URL
+};
+document.getElementById("back").onclick = function() {
+    window.location.href = "https://www.hello.com"; // Replace with your desired URL
+};
+        const firebaseHost = 'https://smart-agricultrure-default-rtdb.firebaseio.com/';
+        const firebasePath = '/sensorData.json';
+        const firebaseAuth = 'AIzaSyD_B-2C-klfrOAPtiGpkAFa_KEGg8aiEvo';
+
         function fetchData() {
-            fetch(scriptUrl)
+            const url = `${firebaseHost}${firebasePath}?auth=${firebaseAuth}`;
+            
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('temperature').innerHTML = `<p>Temperature: ${data.temperature}</p>`;
-                    document.getElementById('humidity').innerHTML = `<p>Humidity: ${data.humidity}</p>`;
-                    document.getElementById('soilMoisture').innerHTML = `<p>Soil Moisture: ${data.soilMoisture}</p>`;
-                    document.getElementById('otherValue').innerHTML = `<p>Other Value: ${data.otherValue}</p>`;
+                    document.getElementById('temperature').innerHTML = `Temperature: ${data.temperature} °C`;
+                    document.getElementById('humidity').innerHTML = `Humidity: ${data.humidity} %`;
+                    document.getElementById('soilMoisture').innerHTML = `Soil Moisture: ${data.soilMoisture}`;
+                    document.getElementById('rainSensor').innerHTML = `Rain Status: ${data.rainSensor}`;
+                    document.getElementById('pumpStatus').innerHTML = `Water Pump: ${data.pumpStatus}`;
+                    document.getElementById('stop').innerHTML = `Security Status: ${data.buzzerStatus}`;
+                    
+                    if (data.temperature > 30) {
+                        document.getElementById('alertMessage').innerHTML = `<strong>Alert:</strong> High temperature detected!`;
+                        document.getElementById('alertBox').style.display = 'block';
+                    } else {
+                        document.getElementById('alertMessage').innerHTML = `<strong>Alert:</strong> Temperature is normal.`;
+                        document.getElementById('alertBox').style.display = 'block';
+                    }
                 })
                 .catch(error => console.error('Error fetching data:', error));
         }
     
-        // Fetch data initially
+   
         fetchData();
     
-     
-        setInterval(fetchData, 500); 
-    </script>
       
+        setInterval(fetchData, 100); 
+    </script>
 </body>
 
 </html>
