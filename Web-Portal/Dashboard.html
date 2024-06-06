@@ -199,10 +199,10 @@
 
     <script>
     document.getElementById("next").onclick = function() {
-    window.location.href = "https://www.example.com"; // Replace with your desired URL
+    window.location.href = "index.html"; // Replace with your desired URL
 };
 document.getElementById("back").onclick = function() {
-    window.location.href = "https://www.hello.com"; // Replace with your desired URL
+    window.location.href = "chart.html"; // Replace with your desired URL
 };
         const firebaseHost = 'https://smart-agricultrure-default-rtdb.firebaseio.com/';
         const firebasePath = '/sensorData.json';
@@ -216,10 +216,10 @@ document.getElementById("back").onclick = function() {
                 .then(data => {
                     document.getElementById('temperature').innerHTML = `Temperature: ${data.temperature} °C`;
                     document.getElementById('humidity').innerHTML = `Humidity: ${data.humidity} %`;
-                    document.getElementById('soilMoisture').innerHTML = `Soil Moisture: ${data.soilMoisture}`;
-                    document.getElementById('rainSensor').innerHTML = `Rain Status: ${data.rainSensor}`;
-                    document.getElementById('pumpStatus').innerHTML = `Water Pump: ${data.pumpStatus}`;
-                    document.getElementById('stop').innerHTML = `Security Status: ${data.buzzerStatus}`;
+                    document.getElementById('soilMoisture').innerHTML = `Soil Moisture: ${data.soil_moisture}`;
+                    document.getElementById('rainSensor').innerHTML = `Rain Status: ${data.rain_status}`;
+                    document.getElementById('pumpStatus').innerHTML = `Water Pump: ${data.pump_status}`;
+                    document.getElementById('stop').innerHTML = `Security Status: ${data.buzzer_status}`;
                     
                     if (data.temperature > 30) {
                         document.getElementById('alertMessage').innerHTML = `<strong>Alert:</strong> High temperature detected!`;

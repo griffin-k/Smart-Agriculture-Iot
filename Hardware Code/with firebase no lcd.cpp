@@ -6,9 +6,9 @@
 #define BUZZER_PIN 12     
 #define THRESHOLD 500  
 
-#define DHTPIN 4  // Replace with an appropriate GPIO pin for ESP32
+#define DHTPIN 4  
 #define DHTTYPE DHT11
-#define SOIL_MOISTURE_PIN 34  // Replace with an appropriate ADC pin for ESP32
+#define SOIL_MOISTURE_PIN 34 
 #define RAIN_SENSOR_PIN 35  
 #define MOTOR_PIN 2  
 
@@ -55,19 +55,19 @@ void loop() {
     
     String pumpStatus = "OFF";
     String rainStatus = "No";
-    String buzzerStatus = "Safe";  // Default buzzer status
+    String buzzerStatus = "Safe";  
 
     if (isnan(temperature) || isnan(humidity)) {
       Serial.println("Failed to read from DHT sensor!");
       return;
     }
 
-    // Control the motor based on soil moisture value
+ 
     if (soilMoistureValue < 1500) {
-      digitalWrite(MOTOR_PIN, HIGH);  // Start the motor
+      digitalWrite(MOTOR_PIN, HIGH);  
       pumpStatus = "ON";
     } else {
-      digitalWrite(MOTOR_PIN, LOW);  // Stop the motor
+      digitalWrite(MOTOR_PIN, LOW); 
       pumpStatus = "OFF";
     }
     
@@ -77,13 +77,13 @@ void loop() {
       rainStatus = "No";
     }
 
-    // Check if the LDR value is below the threshold (light interrupted)
+   
     if (ldrValue == 1) {
-      digitalWrite(BUZZER_PIN, HIGH);  // Turn on the buzzer
-      buzzerStatus = "Risk";  // Update buzzer status
+      digitalWrite(BUZZER_PIN, HIGH);  
+      buzzerStatus = "Risk"; 
     } else {
-      digitalWrite(BUZZER_PIN, LOW);   // Turn off the buzzer
-      buzzerStatus = "Safe";  // Update buzzer status
+      digitalWrite(BUZZER_PIN, LOW);   
+      buzzerStatus = "Safe"; 
     }
 
     // Prepare JSON payload

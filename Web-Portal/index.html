@@ -7,7 +7,6 @@
     <title>Smart Agriculture IOT</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
- 
         .container {
             height: 100vh;
             display: flex;
@@ -30,6 +29,7 @@
                 opacity: 0;
                 transform: translateY(-40px);
             }
+
             100% {
                 opacity: 1;
                 transform: translateY(0);
@@ -72,19 +72,34 @@
         <div class="card">
             <h2 class="text-3xl font-bold mb-6 text-center">Welcome Back!</h2>
             <div class="mb-4">
-                <input class="w-full" type="text" placeholder="Username">
+                <input class="w-full" type="text" id="username" placeholder="Username">
             </div>
             <div class="mb-6">
-                <input class="w-full" type="password" placeholder="Password">
+                <input class="w-full" type="password" id="password" placeholder="Password">
             </div>
             <div class="flex justify-center">
-                <button class="w-full">Sign In</button>
+                <button class="w-full" onclick="login()">Sign In</button>
             </div>
         </div>
     </div>
 
     <script>
-     
+        function login() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            
+       
+            var validUsername = "admin";
+            var validPassword = "admin";
+            
+            if (username === validUsername && password === validPassword) {
+                // Redirect to the next page if login is correct
+                window.location.href = "dashboard.html";
+            } else {
+                // Show error message
+                alert("Incorrect username or password. Please try again.");
+            }
+        }
     </script>
 </body>
 
