@@ -63,4 +63,4 @@ Contributions are welcome! Please fork the repository and create a pull request 
 This project is licensed under the MIT License.
 
 ## Contact
-For questions or suggestions, please contact [karimullah.khan3637@gmail.com].
+For questions or suggestions, please contact karimullah.khan3637@gmail.com
